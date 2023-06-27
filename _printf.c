@@ -1,17 +1,4 @@
-#include <stdarg.h>
-#include <unistd.h>
-
-/**
- * _putchar - Writes a character to stdout
- * @c: The character to write
- *
- * Return: On success, return the number of characters written.
- * On error, -1 is returned.
- */
-int _putchar(char c)
-{
-	return (write(1, &c, 1));
-}
+#include "main.h"
 
 /**
  * _printf - Prints formatted output to stdout
@@ -36,8 +23,7 @@ int _printf(const char *format, ...)
 			switch (*format)
 			{
 				case 'c':
-					_putchar(va_arg(args, int));
-					count++;
+					count += putchar(va_arg(args, int));
 					break;
 				case 's':
 					str = va_arg(args, char *);
@@ -45,26 +31,22 @@ int _printf(const char *format, ...)
 						str = "(null)";
 					while (*str)
 					{
-						_putchar(*str);
-						count++;
+						count += putchar(*str);
 						str++;
 					}
 					break;
 				case '%':
-					_putchar('%');
-					count++;
+					count += putchar('%');
 					break;
 				default:
-					_putchar('%');
-					_putchar(*format);
-					count += 2;
+					count += putchar('%');
+					count += putchar(*format);
 					break;
 			}
 		}
 		else
 		{
-			_putchar(*format);
-			count++;
+			count += putchar(*format);
 		}
 
 		format++;
@@ -74,4 +56,3 @@ int _printf(const char *format, ...)
 
 	return count;
 }
-
