@@ -1,58 +1,58 @@
+#include <stdarg.h>
+#include <unistd.h>
 #include "main.h"
 
 /**
- * _printf - Prints formatted output to stdout
- * @format: The format string
+ * _printf - Produces output according to a format.
+ * @format: Character string containing directives.
  *
- * Return: The number of characters printed (excluding the null byte)
+ * Return: The number of characters printed (excluding the null byte).
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int count = 0;
-	char *str;
+    va_list args;
+    int printed_chars = 0;
+    int i;
+    char *str;
 
-	va_start(args, format);
+    va_start(args, format);
 
-	while (*format)
-	{
-		if (*format == '%')
-		{
-			format++;
+    for (i = 0; format && format[i]; i++)
+    {
+        if (format[i] == '%')
+        {
+            i++;
+            switch (format[i])
+            {
+                case 'c':
+                    _putchar(va_arg(args, int));
+                    printed_chars++;
+                    break;
+                case 's':
+                    str = va_arg(args, char *);
+                    if (str == NULL)
+                        str = "(null)";
+                    printed_chars += _puts(str);
+                    break;
+                case '%':
+                    _putchar('%');
+                    printed_chars++;
+                    break;
+                default:
+                    _putchar('%');
+                    _putchar(format[i]);
+                    printed_chars += 2;
+                    break;
+            }
+        }
+        else
+        {
+            _putchar(format[i]);
+            printed_chars++;
+        }
+    }
 
-			switch (*format)
-			{
-				case 'c':
-					count += putchar(va_arg(args, int));
-					break;
-				case 's':
-					str = va_arg(args, char *);
-					if (str == NULL)
-						str = "(null)";
-					while (*str)
-					{
-						count += putchar(*str);
-						str++;
-					}
-					break;
-				case '%':
-					count += putchar('%');
-					break;
-				default:
-					count += putchar('%');
-					count += putchar(*format);
-					break;
-			}
-		}
-		else
-		{
-			count += putchar(*format);
-		}
+    va_end(args);
 
-		format++;
-	}
-
-	va_end(args);
-
-	return count;
+    return (printed_chars);
 }
